@@ -2,7 +2,7 @@ import pandas as pd
 import random
 
 # read data
-data = pd.read_csv("compas-scores-two-years.csv", header=0, usecols=['sex', 'age_cat', 'race', 'priors_count', 'c_charge_degree', 'two_year_recid'])
+data = pd.read_csv("compas-scores-two-years.csv", header=0, usecols=['id', 'sex', 'age_cat', 'race', 'priors_count', 'c_charge_degree', 'two_year_recid'])
 
 # remove other races
 data = data.drop(data[((data.race != 'African-American') & (data.race != 'Caucasian'))].index)
