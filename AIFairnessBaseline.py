@@ -8,6 +8,7 @@ from aif360.metrics import BinaryLabelDatasetMetric
 from aif360.algorithms.preprocessing import Reweighing
 from sklearn.preprocessing import StandardScaler
 from IPython.display import Markdown, display
+from matplotlib import pyplot as plt
 
 # setup
 sys.path.insert(1, "../")
@@ -60,6 +61,13 @@ metric_transf_train_sex = BinaryLabelDatasetMetric(dataset_transf_train_sex,
                                                unprivileged_groups=unprivileged_groups_sex,
                                                privileged_groups=privileged_groups_sex)
 print("Difference in mean outcomes between unprivileged and privileged groups for sex preprocessing = %f" % metric_transf_train_sex.mean_difference())
+
+# graph
+data = [metric_orig_train_race.mean_difference(), metric_orig_train_sex.mean_difference(), metric_transf_train_race.mean_difference(), metric_transf_train_sex.mean_difference()]
+plt.bar(["Race Unmitigated", "Sex Unmitigated", "Race Mitigated", "Sex Mitigated"], data)
+plt.axhline(0, color='black')
+plt.title("Disparate Impact")
+plt.show()
 
 # # mitigate bias on dataset using DisparateImpactRemover
 # di = DisparateImpactRemover(repair_level = 1.0)
