@@ -49,6 +49,10 @@ np.random.seed(0)
 
 # read in data and convert to AIF format
 df = pd.read_csv('data/COMPAS_processed.csv')
+# df = pd.read_csv('data/row_deletion.csv')
+# df = pd.read_csv('data/imputted_pmm.csv')
+# df = pd.read_csv('../MissForest.csv') # processed with R package
+
 binaryLabelDataset = aif360.datasets.BinaryLabelDataset(
     favorable_label=0,
     unfavorable_label=1,
@@ -77,7 +81,7 @@ print("Difference in mean outcomes between unprivileged and privileged groups fo
 
 # train
 model = make_pipeline(StandardScaler(),
-                      RandomForestClassifier(n_estimators=500, min_samples_leaf=25))
+                      LogisticRegression(solver='liblinear', class_weight='balanced'))
 fit_params = {'randomforestclassifier__sample_weight': dataset_orig_train.instance_weights}
 rf_orig = model.fit(dataset_orig_train.features, dataset_orig_train.labels.ravel(), **fit_params)
 
@@ -112,7 +116,7 @@ print("Difference in mean outcomes between unprivileged and privileged groups fo
 
 # train on mitigated data for race
 model = make_pipeline(StandardScaler(),
-                      RandomForestClassifier(n_estimators=500, min_samples_leaf=25))
+                      LogisticRegression(solver='liblinear', class_weight='balanced'))
 fit_params = {'randomforestclassifier__sample_weight': dataset_transf_train_race.instance_weights}
 rf_mit = model.fit(dataset_transf_train_race.features, dataset_transf_train_race.labels.ravel(), **fit_params)
 
